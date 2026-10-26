@@ -2,13 +2,28 @@
 
 .gd-main { padding: var(--elkw-space-l) 0 var(--elkw-space-xl); min-height: 70vh; }
 
-.gd-toolbar { align-items: end; }
-.gd-jahr { min-width: 0; }
-.gd-jahr__ctrl { display: flex; gap: 0.5rem; }
-.gd-jahr__ctrl select { width: 7rem; }
-.gd-jahr__ctrl .elkw-btn { padding-left: 0.9rem; padding-right: 0.9rem; }
-.gd-orte__label { display: block; font-size: var(--elkw-fs-small); margin-bottom: 0.25rem; }
-.gd-orte .elkw-segments { margin: 0; }
+.gd-jahr__ctrl { display: inline-flex; align-items: stretch; height: var(--elkw-control-h); }
+.gd-jahr__ctrl select { width: 6rem; height: 100%; margin: 0; padding: 0 1.4rem 0 0.6rem; border-radius: 0; }
+.gd-jahr__ctrl .elkw-btn { display: flex; align-items: center; justify-content: center; width: 2.3rem; height: 100%; padding: 0; margin: 0; font-size: 1.2rem; line-height: 1; }
+.gd-jahr__ctrl .elkw-btn:first-child { border-radius: var(--elkw-radius-input) 0 0 var(--elkw-radius-input); border-right: 0; }
+.gd-jahr__ctrl .elkw-btn:last-child { border-radius: 0 var(--elkw-radius-input) var(--elkw-radius-input) 0; border-left: 0; }
+.gd-filter__toggle { height: var(--elkw-control-h); padding-top: 0; padding-bottom: 0; }
+
+/* Filter: mitlaufende Leiste (Jahr, Filter, aktive Auswahl) + aufklappbares Filterfeld */
+.gd-filter { position: sticky; top: 0; z-index: 5; margin: 0 0 var(--elkw-space-m); background: var(--elkw-white); border-radius: var(--elkw-radius); }
+.gd-filter__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; padding: 0.6rem var(--elkw-space-s); }
+.gd-filter__info { margin: 0; flex: 1 1 12rem; font-size: var(--elkw-fs-small); color: var(--elkw-dunkelgrau); }
+.gd-filter__toggle[aria-expanded="true"] { background: var(--elkw-akzent-20); }
+.gd-filter__panel { padding: 0.25rem var(--elkw-space-s) var(--elkw-space-s); border-top: 1px solid var(--elkw-akzent-20); max-height: 70vh; overflow-y: auto; }
+.gd-gruppe { border: 0; margin: 0.75rem 0 0; padding: 0; }
+.gd-gruppe legend { padding: 0; margin-bottom: 0.4rem; font-weight: 600; }
+.gd-gruppe__hinweis { font-weight: 400; font-size: var(--elkw-fs-small); color: var(--elkw-dunkelgrau); }
+.gd-gruppe .elkw-segments { margin: 0; }
+.gd-gruppe .elkw-choice { display: flex; margin: 0.25rem 0; }
+.gd-anz { font-size: 0.8em; }
+.gd-filter__end { display: flex; justify-content: flex-end; margin-top: var(--elkw-space-s); }
+.gd-vergangen { margin: 0 0 var(--elkw-space-s); }
+.gd-vergangen .elkw-btn { white-space: normal; text-align: left; max-width: 100%; }
 
 .gd-panel { border-top-left-radius: 0; border-top-right-radius: 0; }
 .gd-legende { margin-top: 0; }
@@ -42,8 +57,6 @@
 .gd-uhr { border-bottom: 1px solid currentColor; }
 .gd-kirche { width: 0.95em; height: 0.95em; flex: none; vertical-align: -0.1em; }
 .gd-zeile .gd-kirche { margin-right: 0.3em; color: var(--elkw-action); }
-.gd-schalter { align-self: center; display: flex; flex-direction: column; gap: 0.25rem; }
-.gd-schalter .elkw-choice { margin: 0; }
 
 /* Heimatkirche: bewusste Ausnahme vom Ein-Farben-Prinzip (Wunsch der Gemeinde) – Schmuckfarbe 08 Dunkelgrün, immer mit „HK“ */
 .gd-main, .elkw-drawer { --gd-heimat: #4F806E; }
@@ -68,10 +81,12 @@
 .gd-tag-liste > li { flex-wrap: nowrap; }
 
 @media (max-width: 640px) {
-  .gd-toolbar { flex-direction: column; align-items: stretch; }
-  .elkw-hello h1 { font-size: 1.9rem; line-height: 2.3rem; }
+  .gd-filter__bar { padding: 0.5rem 0.75rem; }
+  .gd-filter__info { flex-basis: 100%; order: 3; }
+  .gd-jahr__ctrl select { width: 5.6rem; }
+  .gd-filter__toggle { padding-left: 1rem; padding-right: 1rem; }
+    .elkw-hello h1 { font-size: 1.9rem; line-height: 2.3rem; }
   .elkw-brandbar .elkw-wordmark { --d: 40px; }
-  .elkw-stats { grid-template-columns: repeat(2, 1fr); }
   .gd-eintrag h3 { font-size: 1.05rem; }
   .gd-panel.elkw-surface { padding-left: 0.75rem; padding-right: 0.75rem; }
   .gd-lang { display: none; }

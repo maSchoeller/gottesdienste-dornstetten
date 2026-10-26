@@ -35,26 +35,32 @@
     <p class="elkw-loading" id="gd-laden" aria-busy="true">Wird geladen …</p>
 
     <div id="gd-app" hidden>
-      <div class="elkw-toolbar gd-toolbar">
-        <div class="elkw-field gd-jahr">
-          <label for="gd-jahr">Jahr</label>
-          <div class="gd-jahr__ctrl">
+      <div class="gd-filter" id="gd-filter">
+        <div class="gd-filter__bar">
+          <div class="gd-jahr__ctrl" role="group" aria-label="Jahr">
             <button type="button" class="elkw-btn elkw-btn--outline elkw-btn--noarrow" id="gd-jahr-zurueck" aria-label="Vorheriges Jahr">‹</button>
-            <select id="gd-jahr"></select>
+            <select id="gd-jahr" aria-label="Jahr"></select>
             <button type="button" class="elkw-btn elkw-btn--outline elkw-btn--noarrow" id="gd-jahr-vor" aria-label="Nächstes Jahr">›</button>
           </div>
+          <button type="button" class="elkw-btn elkw-btn--outline elkw-btn--noarrow gd-filter__toggle" id="gd-filter-toggle" aria-expanded="false" aria-controls="gd-filter-panel">Filter<span id="gd-filter-anzahl"></span></button>
+          <p class="gd-filter__info" id="gd-filter-info" aria-live="polite"></p>
+          <button type="button" class="elkw-btn elkw-btn--text elkw-btn--noarrow" id="gd-reset" hidden>Zurücksetzen</button>
         </div>
-        <div class="gd-orte">
-          <span class="gd-orte__label" id="gd-orte-label">Ort</span>
-          <ul class="elkw-segments" id="gd-orte" aria-labelledby="gd-orte-label"></ul>
-        </div>
-        <div class="gd-schalter">
-          <label class="elkw-choice"><input type="checkbox" id="gd-sonder" checked> Sonderveranstaltungen anzeigen</label>
-          <label class="elkw-choice"><input type="checkbox" id="gd-heimat" checked> Heimatkirche anzeigen</label>
+        <div class="gd-filter__panel" id="gd-filter-panel" hidden>
+          <fieldset class="gd-gruppe">
+            <legend>Orte <span class="gd-gruppe__hinweis">(mehrere wählbar)</span></legend>
+            <ul class="elkw-segments" id="gd-orte"></ul>
+          </fieldset>
+          <fieldset class="gd-gruppe">
+            <legend>Außerdem anzeigen</legend>
+            <label class="elkw-choice"><input type="checkbox" id="gd-heimat" checked> Heimatkirche</label>
+            <label class="elkw-choice"><input type="checkbox" id="gd-sonder" checked> Sonderveranstaltungen <span class="gd-gruppe__hinweis">(Friedensgebete, Andachten, Trauungen, Konzerte …)</span></label>
+          </fieldset>
+          <div class="gd-filter__end"><button type="button" class="elkw-btn elkw-btn--noarrow" id="gd-filter-fertig">Fertig</button></div>
         </div>
       </div>
 
-      <dl class="elkw-stats" id="gd-stats"></dl>
+      <p class="gd-vergangen" id="gd-vergangen-wrap" hidden><button type="button" class="elkw-btn elkw-btn--text elkw-btn--noarrow" id="gd-vergangen" aria-expanded="false"></button></p>
 
       <ul class="elkw-tabs" role="tablist" aria-label="Ansicht">
         <li><button role="tab" id="gd-tab-plan" aria-controls="gd-panel-plan" aria-selected="true">Jahresplaner</button></li>
