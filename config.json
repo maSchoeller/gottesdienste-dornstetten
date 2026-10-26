@@ -3,6 +3,7 @@
   "abJahr": 2019,
   "jahreVoraus": 2,
   "interneEintraegeZeigen": false,
+  "predigtDienstId": 75,
   "heimatkircheMuster": "Heimatkirche",
   "gottesdienstMuster": ["Gottesdienst", "Christvesper", "Christmet+e", "Osternacht", "Auferstehungsfeier", "Waldweihnacht", "Abendmahl", "Sterbestunde Jesu", "Heimatkirche"],
   "kalender": [

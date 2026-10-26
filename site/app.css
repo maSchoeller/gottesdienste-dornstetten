@@ -15,8 +15,11 @@
 .gd-stand { margin-top: var(--elkw-space-s); }
 
 /* Plan je Monat: 12 Monate als Raster, je Monat Tage × Orte mit Uhrzeit */
-.gd-monate { --gd-spalten: 4; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, max(18rem, calc(4.6rem + var(--gd-spalten) * 4.3rem))), 1fr)); gap: var(--elkw-space-l) var(--elkw-gap); }
-.gd-monat-plan h3 { margin: 0 0 0.5rem; font-size: var(--elkw-fs-h4); }
+.gd-monate { --gd-spalten: 4; margin-top: var(--elkw-space-s); display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, max(18rem, calc(4.6rem + var(--gd-spalten) * 4.3rem))), 1fr)); gap: var(--elkw-space-l) var(--elkw-gap); }
+.gd-monat-plan { container-type: inline-size; background: var(--elkw-akzent-10); border-radius: var(--elkw-radius); padding: 0.75rem 1rem 1rem; }
+.gd-monat-plan h3 { margin: 0 0 0.5rem; font-size: var(--elkw-fs-h3); font-weight: 300; }
+.gd-monat-plan--aktuell { background: var(--elkw-akzent-20); }
+.gd-prediger { display: block; font-size: 0.7rem; line-height: 1.2; color: var(--elkw-dunkelgrau); margin-top: 0.1rem; }
 .gd-monat-plan--aktuell h3 { color: var(--elkw-action); }
 .gd-hinweis { font-size: var(--elkw-fs-small); font-weight: 400; }
 .gd-keine { margin: 0; color: var(--elkw-dunkelgrau); }
@@ -29,6 +32,8 @@
 .gd-mtab .gd-z { text-align: center; }
 .elkw .gd-mtab tbody tr:last-child th { border-bottom: 0; }
 .gd-kurz { display: none; text-decoration: none; }
+/* schmale Monatskachel: kurze Spaltenköpfe */
+@container (max-width: 34rem) { .gd-lang { display: none; } .gd-kurz { display: inline; } }
 .gd-mtab tr.gd-so th[scope="row"] { font-weight: 600; }
 .gd-mtab tr.gd-heute { background: var(--elkw-akzent-10); }
 .gd-mtab tr.gd-vorbei, .gd-mtab tr.gd-vorbei .gd-zeit { color: var(--elkw-dunkelgrau); }

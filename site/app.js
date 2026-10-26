@@ -124,7 +124,7 @@
         spalten.forEach(function (o) {
           var hier = e.filter(function (t) { return t.ort === o.key; });
           html += '<td class="gd-z">' + (hier.length
-            ? hier.map(function (t) { return '<button type="button" class="gd-zeit' + (t.heimat ? ' gd-heimat' : '') + '" data-tag="' + k + '" title="' + esc(t.titel + (t.zusatz ? ' – ' + t.zusatz : '')) + '" aria-label="' + esc(o.name + ', ' + (t.ganztags ? 'ganztägig' : uhrzeit(t.l)) + ', ' + (t.heimat ? 'Heimatkirche' : t.art === 'gd' ? 'Gottesdienst' : 'Sonderveranstaltung') + ': ' + t.titel) + '">' + symbol(t) + '<span class="gd-uhr">' + (t.ganztags ? 'ganzt.' : zeit(t.l)) + '</span>' + (t.heimat ? '<span class="gd-hk" aria-hidden="true">HK</span>' : '') + '</button>'; }).join('')
+            ? hier.map(function (t) { return '<button type="button" class="gd-zeit' + (t.heimat ? ' gd-heimat' : '') + '" data-tag="' + k + '" title="' + esc(t.titel + (t.zusatz ? ' – ' + t.zusatz : '')) + '" aria-label="' + esc(o.name + ', ' + (t.ganztags ? 'ganztägig' : uhrzeit(t.l)) + ', ' + (t.heimat ? 'Heimatkirche' : t.art === 'gd' ? 'Gottesdienst' : 'Sonderveranstaltung') + ': ' + t.titel) + '">' + symbol(t) + '<span class="gd-uhr">' + (t.ganztags ? 'ganzt.' : zeit(t.l)) + '</span>' + (t.heimat ? '<span class="gd-hk" aria-hidden="true">HK</span>' : '') + '</button>' + (t.prediger ? '<span class="gd-prediger">' + esc(t.prediger) + '</span>' : ''); }).join('')
             : '<span aria-hidden="true">–</span><span class="sr-only">kein Gottesdienst</span>') + '</td>';
         });
         html += '</tr>';
@@ -148,6 +148,7 @@
       '<div class="elkw-eventlist__body"><h3>' + esc(t.titel) + '</h3>' +
       (ohneDatum ? '' : '<p class="sr-only">' + datumLang(l, true) + '</p>') +
       '<p class="gd-zeile">' + zeile + '</p>' +
+      (t.prediger ? '<p>Predigt: ' + esc(t.prediger) + '</p>' : '') +
       (t.zusatz ? '<p>' + esc(t.zusatz) + '</p>' : '') +
       '</div></li>';
   }

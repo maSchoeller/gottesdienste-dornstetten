@@ -60,6 +60,44 @@ $kalOrt  = @{}; foreach ($k in $cfg.kalender) { $kalOrt[[int]$k.id] = $k.ort }
 $kalHeimat = @($cfg.kalender | Where-Object { $_.heimatkirche } | ForEach-Object { [int]$_.id })
 $kalQuery = ($cfg.kalender | ForEach-Object { "calendar_ids[]=$($_.id)" }) -join '&'
 
+# Prediger: bestaetigte Einteilung im Dienst "Predigt/Liturgie" (Dienstplan),
+# sonst ein Name mit Amtstitel aus dem Untertitel (z. B. "Pfr. Stahl")
+function Get-Kurzname([string]$name) {
+    $teile = $name.Trim() -split '\s+'
+    if ($teile.Count -lt 2) { return $name.Trim() }
+    return "$($teile[0].Substring(0, 1)). $($teile[1..($teile.Count - 1)] -join ' ')"
+}
+$predigtDienst = [int]$cfg.predigtDienstId
+$prediger = @{}   # Schluessel: Termin-ID|Startzeit (UTC-Ticks)
+$dienstplanOk = $true
+for ($jahr = [int]$cfg.abJahr; $jahr -le $bis -and $dienstplanOk; $jahr++) {
+    foreach ($m in 1..12) {
+        $von = Get-Date -Year $jahr -Month $m -Day 1
+        $url = "$($cfg.instanz)/api/events?from=$($von.ToString('yyyy-MM-dd'))&to=$($von.AddMonths(1).AddDays(-1).ToString('yyyy-MM-dd'))&include=eventServices"
+        try { $ev = (Invoke-RestMethod -Uri $url -Headers $headers).data }
+        catch { Write-Warning "Dienstplan nicht lesbar ($($_.Exception.Message)) - Prediger nur aus Untertiteln."; $dienstplanOk = $false; break }
+        foreach ($e in $ev) {
+            if (-not $e.appointmentId) { continue }
+            $namen = @($e.eventServices | Where-Object { $_.serviceId -eq $predigtDienst -and $_.name -and $_.agreed } |
+                ForEach-Object {
+                    $pa = $_.person.domainAttributes
+                    if ($pa.firstName -and $pa.lastName) { "$($pa.firstName.Trim().Substring(0, 1)). $($pa.lastName.Trim())" }
+                    elseif ($_.personId -or $_.name.Trim() -match '^\p{Lu}\p{Ll}+\s+\p{Lu}[\p{L}-]+$') { Get-Kurzname $_.name }   # "Vorname Nachname"
+                    else { $_.name.Trim() }
+                } | Where-Object { $_ -notmatch $cfg.heimatkircheMuster })
+            if ($namen.Count) { $prediger["$($e.appointmentId)|$(([datetime]$e.startDate).ToUniversalTime().Ticks)"] = $namen -join ' / ' }
+        }
+    }
+}
+$titelRegex = '(?:Pfr\.?|Pfarrer(?:in)?|Präd\.?(?:in)?|Prädikant(?:in)?|Diak\.?|Diakon(?:in)?|Dek\.?|Dekan(?:in)?|Vikar(?:in)?|Pastor(?:in)?)(?:\s+i\.\s?R\.)?(?:\s+Dr\.)?\s+\p{Lu}[\p{L}-]+'
+function Get-Prediger($b, $start) {
+    $p = $prediger["$($b.id)|$(([datetime]$start).ToUniversalTime().Ticks)"]
+    if ($p) { return $p }
+    $m = [regex]::Matches("$($b.subtitle)", $titelRegex)
+    if ($m.Count) { return (@($m | ForEach-Object { $_.Value -replace '\s+', ' ' }) -join ', ') }
+    return $null
+}
+
 # jahresweise abrufen, damit einzelne Antworten klein bleiben
 for ($jahr = [int]$cfg.abJahr; $jahr -le $bis; $jahr++) {
     $url = "$($cfg.instanz)/api/calendars/appointments?$kalQuery&from=$jahr-01-01&to=$jahr-12-31"
@@ -74,6 +112,7 @@ for ($jahr = [int]$cfg.abJahr; $jahr -le $bis; $jahr++) {
             ganztags = [bool]$b.allDay
             titel  = $b.title
             zusatz = $b.subtitle
+            prediger = Get-Prediger $b $a.calculated.startDate
             ort    = Get-Ort $b $kalOrt[[int]$b.calendar.id]
             art    = $(if ($b.title -match $gdRegex) { 'gd' } else { 'sonder' })
             heimat = ($kalHeimat -contains [int]$b.calendar.id) -or ($b.title -match $cfg.heimatkircheMuster)
