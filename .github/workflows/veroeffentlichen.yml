@@ -1,0 +1,47 @@
+# Holt die Termine aus ChurchTools und veröffentlicht site/ auf GitHub Pages.
+# Läuft um 3 und 15 Uhr deutscher Winterzeit (im Sommer 4 und 16 Uhr), bei jedem Push auf main und von Hand.
+name: Veröffentlichen
+
+on:
+  schedule:
+    - cron: '0 2,14 * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Termine aus ChurchTools holen
+        shell: pwsh
+        env:
+          CT_TOKEN: ${{ secrets.CT_TOKEN }}
+        run: ./scripts/export.ps1
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  veroeffentlichen:
+    needs: bauen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

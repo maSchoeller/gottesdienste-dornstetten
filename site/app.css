@@ -1,0 +1,69 @@
+/* Anordnung für den Gottesdienst-Jahresplaner – nur Layout, Farben aus den ELKW-Variablen */
+
+.gd-main { padding: var(--elkw-space-l) 0 var(--elkw-space-xl); min-height: 70vh; }
+
+.gd-toolbar { align-items: end; }
+.gd-jahr { min-width: 0; }
+.gd-jahr__ctrl { display: flex; gap: 0.5rem; }
+.gd-jahr__ctrl select { width: 7rem; }
+.gd-jahr__ctrl .elkw-btn { padding-left: 0.9rem; padding-right: 0.9rem; }
+.gd-orte__label { display: block; font-size: var(--elkw-fs-small); margin-bottom: 0.25rem; }
+.gd-orte .elkw-segments { margin: 0; }
+
+.gd-panel { border-top-left-radius: 0; border-top-right-radius: 0; }
+.gd-legende { margin-top: 0; }
+.gd-stand { margin-top: var(--elkw-space-s); }
+
+/* Plan je Monat: 12 Monate als Raster, je Monat Tage × Orte mit Uhrzeit */
+.gd-monate { --gd-spalten: 4; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, max(18rem, calc(4.6rem + var(--gd-spalten) * 4.3rem))), 1fr)); gap: var(--elkw-space-l) var(--elkw-gap); }
+.gd-monat-plan h3 { margin: 0 0 0.5rem; font-size: var(--elkw-fs-h4); }
+.gd-monat-plan--aktuell h3 { color: var(--elkw-action); }
+.gd-hinweis { font-size: var(--elkw-fs-small); font-weight: 400; }
+.gd-keine { margin: 0; color: var(--elkw-dunkelgrau); }
+.gd-mwrap { overflow-x: auto; }
+.gd-mtab { width: 100%; min-width: calc(3.9rem + var(--gd-spalten) * 2.9rem); table-layout: fixed; font-size: var(--elkw-fs-small); font-variant-numeric: tabular-nums; }
+.elkw .gd-mtab th, .elkw .gd-mtab td { padding: 0.3rem 0.2rem; }
+.elkw .gd-mtab thead th { font-size: 0.75rem; letter-spacing: 0; text-transform: none; line-height: 1.2; vertical-align: bottom; }
+.elkw .gd-mtab thead th:first-child { width: 4.6rem; }
+.gd-mtab th[scope="row"] { font-weight: 400; white-space: nowrap; text-align: left; }
+.gd-mtab .gd-z { text-align: center; }
+.elkw .gd-mtab tbody tr:last-child th { border-bottom: 0; }
+.gd-kurz { display: none; text-decoration: none; }
+.gd-mtab tr.gd-so th[scope="row"] { font-weight: 600; }
+.gd-mtab tr.gd-heute { background: var(--elkw-akzent-10); }
+.gd-mtab tr.gd-vorbei, .gd-mtab tr.gd-vorbei .gd-zeit { color: var(--elkw-dunkelgrau); }
+.gd-datum, .gd-zeit { border: 0; background: transparent; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+.gd-zeit { display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 1px 3px; margin: 0 auto; color: var(--elkw-action); font-weight: 600; }
+.gd-uhr { border-bottom: 1px solid currentColor; }
+.gd-kirche { width: 0.95em; height: 0.95em; flex: none; vertical-align: -0.1em; }
+.gd-zeile .gd-kirche { margin-right: 0.3em; color: var(--elkw-action); }
+.gd-sonder { align-self: center; margin: 0; }
+.gd-zeit + .gd-zeit { margin-top: 0.15rem; }
+.gd-datum:hover { text-decoration: underline dashed; }
+.gd-zeit:hover .gd-uhr { border-bottom-style: dashed; }
+
+
+/* Liste */
+.gd-monat { margin: var(--elkw-space-l) 0 var(--elkw-space-s); }
+.gd-monat:first-child { margin-top: 0; }
+.gd-eintrag h3 { font-size: var(--elkw-fs-h4); line-height: 1.3; overflow-wrap: normal; }
+.gd-eintrag p { margin: 0; }
+.gd-eintrag .gd-ort { white-space: nowrap; }
+.gd-vorbei { color: var(--elkw-dunkelgrau); }
+
+/* Drawer */
+.gd-tag-liste > li { flex-wrap: nowrap; }
+
+@media (max-width: 640px) {
+  .gd-toolbar { flex-direction: column; align-items: stretch; }
+  .elkw-hello h1 { font-size: 1.9rem; line-height: 2.3rem; }
+  .elkw-brandbar .elkw-wordmark { --d: 40px; }
+  .elkw-stats { grid-template-columns: repeat(2, 1fr); }
+  .gd-eintrag h3 { font-size: 1.05rem; }
+  .gd-panel.elkw-surface { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .gd-lang { display: none; }
+  .gd-kurz { display: inline; }
+  .gd-zeit { flex-direction: column; }
+  .elkw .gd-mtab thead th:first-child { width: 3.9rem; }
+  .elkw .gd-mtab th, .elkw .gd-mtab td { padding-left: 0.1rem; padding-right: 0.1rem; }
+}

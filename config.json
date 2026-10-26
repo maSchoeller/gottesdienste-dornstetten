@@ -1,0 +1,20 @@
+{
+  "instanz": "https://elkw1608.krz.tools",
+  "abJahr": 2019,
+  "jahreVoraus": 2,
+  "interneEintraegeZeigen": false,
+  "gottesdienstMuster": ["Gottesdienst", "Christvesper", "Christmet+e", "Osternacht", "Auferstehungsfeier", "Waldweihnacht", "Abendmahl", "Sterbestunde Jesu", "Heimatkirche"],
+  "kalender": [
+    { "id": 2,  "ort": null },
+    { "id": 91, "ort": "hallwangen" },
+    { "id": 94, "ort": "aach" },
+    { "id": 97, "ort": "map" }
+  ],
+  "orte": [
+    { "key": "dornstetten", "name": "Dornstetten",        "kurz": "Dorn.", "muster": ["Dornstetten", "Martinskirche"] },
+    { "key": "hallwangen",  "name": "Hallwangen",         "kurz": "Hallw.", "muster": ["Hallwangen", "Engeltalkirche"] },
+    { "key": "aach",        "name": "Aach",               "kurz": "Aach", "muster": ["Aach", "Andreaskirche"] },
+    { "key": "map",         "name": "m.a.p. Dornstetten", "spalte": "m.a.p.", "kurz": "m.a.p.", "muster": ["m.a.p"] },
+    { "key": "ohne",        "name": "Ohne Ortsangabe",    "spalte": "Ohne Ort", "kurz": "o. Ort", "muster": [] }
+  ]
+}

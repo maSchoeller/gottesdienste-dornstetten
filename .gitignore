@@ -1,0 +1,3 @@
+*.dat
+# wird beim Veröffentlichen frisch aus ChurchTools erzeugt
+site/data/gottesdienste.json

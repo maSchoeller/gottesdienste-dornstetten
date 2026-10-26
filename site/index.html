@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de" class="elkw" data-farbwelt="01" data-stil="nahbar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gottesdienst-Jahresplaner</title>
+<meta name="description" content="Wann und wo Gottesdienst ist: Jahresübersicht der Evangelischen Verbundkirchengemeinde Dornstetten mit Dornstetten, Hallwangen und Aach.">
+<link rel="stylesheet" href="elkw/elkw-fonts.css">
+<link rel="stylesheet" href="elkw/elkw-tokens.css">
+<link rel="stylesheet" href="elkw/elkw-components.css">
+<link rel="stylesheet" href="elkw/elkw-app.css">
+<link rel="stylesheet" href="elkw/elkw-nahbar.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="elkw-skiplink" href="#inhalt">Zum Inhalt springen</a>
+
+<div class="elkw-brandbar">
+  <div class="elkw-container elkw-brandbar__inner">
+    <span class="elkw-brandbar__logo"><span class="elkw-wordmark"><img src="elkw/logo/elkw-bildmarke.svg" alt=""><span><span class="l1">Evangelische Verbundkirchengemeinde</span><span class="l2">Dornstetten</span></span></span></span>
+  </div>
+</div>
+
+<main id="inhalt" tabindex="-1" class="elkw-ground gd-main">
+  <div class="elkw-container">
+    <div class="elkw-hello">
+      <div>
+        <p class="elkw-kicker">Dornstetten · Hallwangen · Aach</p>
+        <h1>Gottesdienst-<strong>Jahresplaner</strong></h1>
+        <p id="gd-naechster" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div id="gd-meldung"></div>
+    <p class="elkw-loading" id="gd-laden" aria-busy="true">Wird geladen …</p>
+
+    <div id="gd-app" hidden>
+      <div class="elkw-toolbar gd-toolbar">
+        <div class="elkw-field gd-jahr">
+          <label for="gd-jahr">Jahr</label>
+          <div class="gd-jahr__ctrl">
+            <button type="button" class="elkw-btn elkw-btn--outline elkw-btn--noarrow" id="gd-jahr-zurueck" aria-label="Vorheriges Jahr">‹</button>
+            <select id="gd-jahr"></select>
+            <button type="button" class="elkw-btn elkw-btn--outline elkw-btn--noarrow" id="gd-jahr-vor" aria-label="Nächstes Jahr">›</button>
+          </div>
+        </div>
+        <div class="gd-orte">
+          <span class="gd-orte__label" id="gd-orte-label">Ort</span>
+          <ul class="elkw-segments" id="gd-orte" aria-labelledby="gd-orte-label"></ul>
+        </div>
+        <label class="elkw-choice gd-sonder"><input type="checkbox" id="gd-sonder" checked> Sonderveranstaltungen anzeigen</label>
+      </div>
+
+      <dl class="elkw-stats" id="gd-stats"></dl>
+
+      <ul class="elkw-tabs" role="tablist" aria-label="Ansicht">
+        <li><button role="tab" id="gd-tab-plan" aria-controls="gd-panel-plan" aria-selected="true">Jahresplaner</button></li>
+        <li><button role="tab" id="gd-tab-liste" aria-controls="gd-panel-liste" aria-selected="false">Liste</button></li>
+      </ul>
+
+      <section class="elkw-surface gd-panel" id="gd-panel-plan" role="tabpanel" aria-labelledby="gd-tab-plan">
+        <h2 class="sr-only">Jahresplaner</h2>
+        <p class="small gd-legende">Uhrzeiten je Ort; <span class="gd-zeile"><svg class="gd-kirche" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 1.2h2M7 0.4v2.6M7 3l-2.6 3.2V15h5.2V6.2zM9.6 9.2l3.9 1.8V15H9.6M2 15h12.4M7 15v-2.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg> = Gottesdienst</span>, ohne Symbol = Sonderveranstaltung. Ein Klick auf Datum oder Uhrzeit zeigt, was an dem Tag stattfindet.</p>
+        <div class="gd-monate" id="gd-plan"></div>
+      </section>
+
+      <section class="elkw-surface gd-panel" id="gd-panel-liste" role="tabpanel" aria-labelledby="gd-tab-liste" hidden>
+        <h2 class="sr-only">Liste</h2>
+        <div id="gd-liste"></div>
+      </section>
+
+      <p class="small gd-stand" id="gd-stand"></p>
+    </div>
+  </div>
+</main>
+
+<dialog class="elkw-drawer" id="gd-tag" aria-labelledby="gd-tag-titel">
+  <div class="elkw-drawer__head"><h2 id="gd-tag-titel">Tag</h2><button class="elkw-close" data-close aria-label="Schließen">×</button></div>
+  <div class="elkw-drawer__body" id="gd-tag-inhalt"></div>
+</dialog>
+
+<script src="elkw/elkw-behaviors.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
