@@ -19,6 +19,15 @@ function Get-Token {
 }
 
 $headers = @{ Authorization = "Login $(Get-Token)" }
+
+# Vorab pruefen, ob der Account alle Kalender sehen darf – sonst verstaendlich abbrechen
+$me      = (Invoke-RestMethod "$($cfg.instanz)/api/whoami" -Headers $headers).data
+$sichtbar = @((Invoke-RestMethod "$($cfg.instanz)/api/calendars" -Headers $headers).data | ForEach-Object { [int]$_.id })
+$fehlend = @($cfg.kalender | Where-Object { $sichtbar -notcontains [int]$_.id } | ForEach-Object { $_.id })
+Write-Host "Account: $($me.firstName) $($me.lastName) (ID $($me.id)), sichtbare Kalender: $($sichtbar -join ', ')"
+if ($fehlend.Count) {
+    throw "Der Account darf diese Kalender nicht sehen: $($fehlend -join ', '). In ChurchTools unter Berechtigungen > Kalender 'Kategorie sehen' fuer diese Kalender freigeben."
+}
 $bis     = (Get-Date).Year + [int]$cfg.jahreVoraus
 
 # Ort bestimmen: Ort/Kirche im Titel geht vor (2026 steht alles im Kalender Dornstetten),
