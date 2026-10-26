@@ -37,7 +37,15 @@
 .gd-uhr { border-bottom: 1px solid currentColor; }
 .gd-kirche { width: 0.95em; height: 0.95em; flex: none; vertical-align: -0.1em; }
 .gd-zeile .gd-kirche { margin-right: 0.3em; color: var(--elkw-action); }
-.gd-sonder { align-self: center; margin: 0; }
+.gd-schalter { align-self: center; display: flex; flex-direction: column; gap: 0.25rem; }
+.gd-schalter .elkw-choice { margin: 0; }
+
+/* Heimatkirche: bewusste Ausnahme vom Ein-Farben-Prinzip (Wunsch der Gemeinde) – Schmuckfarbe 08 Dunkelgrün, immer mit „HK“ */
+.gd-main, .elkw-drawer { --gd-heimat: #4F806E; }
+.gd-zeit.gd-heimat, .gd-heimat-text, .gd-heimat .gd-kirche { color: var(--gd-heimat); }
+.gd-heimat-text { font-weight: 600; }
+.gd-hk { font-size: 0.65em; font-weight: 600; letter-spacing: 0.02em; }
+.gd-eintrag.gd-heimat { border-left: 4px solid var(--gd-heimat); padding-left: 0.75rem; }
 .gd-zeit + .gd-zeit { margin-top: 0.15rem; }
 .gd-datum:hover { text-decoration: underline dashed; }
 .gd-zeit:hover .gd-uhr { border-bottom-style: dashed; }

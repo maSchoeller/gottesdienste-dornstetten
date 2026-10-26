@@ -9,7 +9,7 @@
   var WT_LANG = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
   var $ = function (id) { return document.getElementById(id); };
-  var state = { jahr: null, ort: 'alle', sonder: true };
+  var state = { jahr: null, ort: 'alle', sonder: true, heimat: true };
   var daten, orte = {}, jahre = [];
 
   // Datum/Uhrzeit immer in deutscher Ortszeit, unabhängig vom Gerät
@@ -29,7 +29,7 @@
 
   function heute() { return lokal(new Date().toISOString()); }
 
-  function sichtbar(t) { return t.l.jahr === state.jahr && (state.ort === 'alle' || t.ort === state.ort) && (state.sonder || t.art === 'gd'); }
+  function sichtbar(t) { return t.l.jahr === state.jahr && (state.ort === 'alle' || t.ort === state.ort) && (state.sonder || t.art === 'gd') && (state.heimat || !t.heimat); }
 
   // ---------- Steuerung ----------
   function bauSteuerung() {
@@ -50,6 +50,7 @@
       if (b) setze({ ort: b.value });
     });
     $('gd-sonder').addEventListener('change', function (e) { setze({ sonder: e.target.checked }); });
+    $('gd-heimat').addEventListener('change', function (e) { setze({ heimat: e.target.checked }); });
 
   }
   function springe(d) {
@@ -62,6 +63,7 @@
     q.set('jahr', state.jahr);
     if (state.ort === 'alle') q.delete('ort'); else q.set('ort', state.ort);
     if (state.sonder) q.delete('sonder'); else q.set('sonder', '0');
+    if (state.heimat) q.delete('heimat'); else q.set('heimat', '0');
     history.replaceState(null, '', '?' + q.toString() + location.hash);
     zeichne();
   }
@@ -73,6 +75,7 @@
     $('gd-jahr-vor').disabled = jahre.indexOf(state.jahr) >= jahre.length - 1;
     $('gd-orte').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b.value === state.ort); });
     $('gd-sonder').checked = state.sonder;
+    $('gd-heimat').checked = state.heimat;
 
     var liste = daten.termine.filter(sichtbar);
     var proTag = {};
@@ -84,7 +87,7 @@
   }
 
   function zeichneStats() {
-    var imJahr = daten.termine.filter(function (t) { return t.l.jahr === state.jahr && (state.sonder || t.art === 'gd'); });
+    var imJahr = daten.termine.filter(function (t) { return t.l.jahr === state.jahr && (state.sonder || t.art === 'gd') && (state.heimat || !t.heimat); });
     var html = '<div><dt>' + (state.sonder ? 'Termine ' : 'Gottesdienste ') + state.jahr + '</dt><dd>' + imJahr.length + '</dd></div>';
     daten.orte.forEach(function (o) {
       var n = imJahr.filter(function (t) { return t.ort === o.key; }).length;
@@ -98,7 +101,7 @@
   // Plan je Monat: Zeilen = Tage mit Gottesdienst, Spalten = Orte, Zelle = Uhrzeit(en)
   function zeichnePlan(proTag) {
     var h = heute(), jetzt = new Date();
-    var imJahr = daten.termine.filter(function (t) { return t.l.jahr === state.jahr && (state.sonder || t.art === 'gd'); });
+    var imJahr = daten.termine.filter(function (t) { return t.l.jahr === state.jahr && (state.sonder || t.art === 'gd') && (state.heimat || !t.heimat); });
     var spalten = state.ort !== 'alle' ? [orte[state.ort]] : daten.orte.filter(function (o) {
       return o.key !== 'ohne' || imJahr.some(function (t) { return t.ort === 'ohne'; });
     });
@@ -121,7 +124,7 @@
         spalten.forEach(function (o) {
           var hier = e.filter(function (t) { return t.ort === o.key; });
           html += '<td class="gd-z">' + (hier.length
-            ? hier.map(function (t) { return '<button type="button" class="gd-zeit" data-tag="' + k + '" title="' + esc(t.titel + (t.zusatz ? ' – ' + t.zusatz : '')) + '" aria-label="' + esc(o.name + ', ' + (t.ganztags ? 'ganztägig' : uhrzeit(t.l)) + ', ' + (t.art === 'gd' ? 'Gottesdienst' : 'Sonderveranstaltung') + ': ' + t.titel) + '">' + symbol(t) + '<span class="gd-uhr">' + (t.ganztags ? 'ganzt.' : zeit(t.l)) + '</span></button>'; }).join('')
+            ? hier.map(function (t) { return '<button type="button" class="gd-zeit' + (t.heimat ? ' gd-heimat' : '') + '" data-tag="' + k + '" title="' + esc(t.titel + (t.zusatz ? ' – ' + t.zusatz : '')) + '" aria-label="' + esc(o.name + ', ' + (t.ganztags ? 'ganztägig' : uhrzeit(t.l)) + ', ' + (t.heimat ? 'Heimatkirche' : t.art === 'gd' ? 'Gottesdienst' : 'Sonderveranstaltung') + ': ' + t.titel) + '">' + symbol(t) + '<span class="gd-uhr">' + (t.ganztags ? 'ganzt.' : zeit(t.l)) + '</span>' + (t.heimat ? '<span class="gd-hk" aria-hidden="true">HK</span>' : '') + '</button>'; }).join('')
             : '<span aria-hidden="true">–</span><span class="sr-only">kein Gottesdienst</span>') + '</td>';
         });
         html += '</tr>';
@@ -139,7 +142,8 @@
     var l = t.l;
     var vorbei = new Date(t.ende || t.start) < new Date();
     var zeile = symbol(t) + (t.art === 'gd' ? '<span class="sr-only">Gottesdienst, </span>' : '') + (t.ganztags ? 'ganztägig' : uhrzeit(l)) + ' · <span class="gd-ort">' + esc(orte[t.ort].name) + '</span>';
-    return '<li class="gd-eintrag' + (vorbei ? ' gd-vorbei' : '') + '">' +
+    if (t.heimat) zeile += ' · <span class="gd-heimat-text">Heimatkirche</span>';
+    return '<li class="gd-eintrag' + (vorbei ? ' gd-vorbei' : '') + (t.heimat ? ' gd-heimat' : '') + '">' +
       (ohneDatum ? '' : '<div class="elkw-dateblock elkw-dateblock--small" aria-hidden="true"><div class="elkw-dateblock__top"><div class="wd">' + WT[l.wt] + '</div><div class="day">' + String(l.tag).padStart(2, '0') + '</div><div class="mon">' + MONATE_KURZ[l.monat] + '</div></div><div class="elkw-dateblock__bottom">' + l.jahr + '</div></div>') +
       '<div class="elkw-eventlist__body"><h3>' + esc(t.titel) + '</h3>' +
       (ohneDatum ? '' : '<p class="sr-only">' + datumLang(l, true) + '</p>') +
@@ -196,6 +200,7 @@
       state.jahr = jahre.indexOf(+q.get('jahr')) >= 0 ? +q.get('jahr') : (jahre.indexOf(hj) >= 0 ? hj : jahre[jahre.length - 1]);
       if (q.get('ort') && orte[q.get('ort')]) state.ort = q.get('ort');
       if (q.get('sonder') === '0') state.sonder = false;
+      if (q.get('heimat') === '0') state.heimat = false;
 
       var s = lokal(daten.stand);
       $('gd-stand').textContent = 'Stand der Daten: ' + s.tag + '. ' + MONATE[s.monat] + ' ' + s.jahr + ', ' + uhrzeit(s) + '. Änderungen vorbehalten.';

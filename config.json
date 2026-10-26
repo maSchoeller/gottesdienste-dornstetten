@@ -3,12 +3,14 @@
   "abJahr": 2019,
   "jahreVoraus": 2,
   "interneEintraegeZeigen": false,
+  "heimatkircheMuster": "Heimatkirche",
   "gottesdienstMuster": ["Gottesdienst", "Christvesper", "Christmet+e", "Osternacht", "Auferstehungsfeier", "Waldweihnacht", "Abendmahl", "Sterbestunde Jesu", "Heimatkirche"],
   "kalender": [
     { "id": 2,  "ort": null },
     { "id": 91, "ort": "hallwangen" },
     { "id": 94, "ort": "aach" },
-    { "id": 97, "ort": "map" }
+    { "id": 97, "ort": "map" },
+    { "id": 75, "ort": null, "heimatkirche": true }
   ],
   "orte": [
     { "key": "dornstetten", "name": "Dornstetten",        "kurz": "Dorn.", "muster": ["Dornstetten", "Martinskirche"] },

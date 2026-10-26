@@ -57,6 +57,7 @@ $gdRegex = '(?i)' + (($cfg.gottesdienstMuster) -join '|')
 
 $termine = [System.Collections.Generic.List[object]]::new()
 $kalOrt  = @{}; foreach ($k in $cfg.kalender) { $kalOrt[[int]$k.id] = $k.ort }
+$kalHeimat = @($cfg.kalender | Where-Object { $_.heimatkirche } | ForEach-Object { [int]$_.id })
 $kalQuery = ($cfg.kalender | ForEach-Object { "calendar_ids[]=$($_.id)" }) -join '&'
 
 # jahresweise abrufen, damit einzelne Antworten klein bleiben
@@ -75,6 +76,7 @@ for ($jahr = [int]$cfg.abJahr; $jahr -le $bis; $jahr++) {
             zusatz = $b.subtitle
             ort    = Get-Ort $b $kalOrt[[int]$b.calendar.id]
             art    = $(if ($b.title -match $gdRegex) { 'gd' } else { 'sonder' })
+            heimat = ($kalHeimat -contains [int]$b.calendar.id) -or ($b.title -match $cfg.heimatkircheMuster)
             kalender = $b.calendar.name
         })
     }
